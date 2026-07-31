@@ -16,32 +16,24 @@ theorem exercise1 {ε : ℝ} (hε : ε > 0) : ∃ δ : ℕ , δ > 0 ∧ (1 / δ)
   by_cases h : ε ≤ 1
   · let δ : ℕ := ⌈1 / ε⌉.toNat
     use δ
-    have hquotient : 0 < 1 / ε := by
-      positivity
     have hceilpos : 0 < ⌈1 / ε⌉ := by
-      exact (Int.ceil_pos).mpr hquotient
+      exact (Int.ceil_pos).mpr (by positivity)
     have hδeq : (δ : ℤ) = ⌈1 / ε⌉ := by
       exact Int.toNat_of_nonneg (le_of_lt hceilpos)
     have hδpos : 0 < δ := by
-      have hδint : (0 : ℤ) < (δ : ℤ) := by
+      exact_mod_cast (show (0 : ℤ) < (δ : ℤ) by
         rw [hδeq]
-        exact hceilpos
-      exact_mod_cast hδint
-    constructor
-    · exact hδpos
-    · have hδreal : (0 : ℝ) < δ := by
-        exact_mod_cast hδpos
-      exact (one_div_le hδreal hε).mpr (by
-        calc
-          1 / ε ≤ (⌈1 / ε⌉ : ℤ) := by
-            exact Int.le_ceil (1 / ε)
-          _ = (δ : ℝ) := by
-            exact_mod_cast hδeq.symm)
-  · use 1
-    constructor
-    · norm_num
-    · norm_num
-      exact le_of_lt (lt_of_not_ge h)
+        exact hceilpos)
+    refine ⟨hδpos, ?_⟩
+    exact (one_div_le (by exact_mod_cast hδpos) hε).mpr (by
+      calc
+        1 / ε ≤ (⌈1 / ε⌉ : ℤ) := by
+          exact Int.le_ceil (1 / ε)
+        _ = (δ : ℝ) := by
+          exact_mod_cast hδeq.symm)
+  · push_neg at h
+    use 1
+    exact ⟨by positivity, by linarith⟩
 
 /-
 Show that convergence can be expressed in terms of rational numbers. Use the above exercise.
@@ -107,12 +99,6 @@ theorem exercise5 : ¬ ∃ a : ℝ, tends_toReal my_diverging_sequence a := by
   intro h
   obtain ⟨a, ha⟩ := h
   obtain ⟨N, hN⟩ := ha (1 / 2) (by norm_num)
-  have h1 :
-      dist (my_diverging_sequence N) a < 1 / 2 := by
-    exact hN N (by omega)
-  have h2 :
-      dist (my_diverging_sequence (N + 1)) a < 1 / 2 := by
-    exact hN (N + 1) (by omega)
   have hdist :
       dist (my_diverging_sequence N)
         (my_diverging_sequence (N + 1)) < 1 := by
@@ -125,10 +111,10 @@ theorem exercise5 : ¬ ∃ a : ℝ, tends_toReal my_diverging_sequence a := by
                   (my_diverging_sequence N) a
                   (my_diverging_sequence (N + 1))
       _ < 1 / 2 + 1 / 2 := by
-            apply add_lt_add
-            · exact h1
-            · rw [dist_comm]
-              exact h2
+        apply add_lt_add
+        · exact hN N (by omega)
+        · rw [dist_comm]
+          exact hN (N + 1) (by omega)
       _ = 1 := by
             norm_num
   have heq :

@@ -139,7 +139,31 @@ lemma deriv_add {f g : ℝ → ℝ} (hf : Differentiable f) (hg : Differentiable
 
 lemma deriv_mul {f g : ℝ → ℝ} (hf : Differentiable f) (hg : Differentiable g) :
     HasDeriv (f * g) (deriv f * g  + f  * deriv g ) := by
-  sorry
+  intro x
+  change TendsTo
+    (fun y => ((f * g) y - (f * g) x) / (y - x)) x
+    ((deriv f * g + f * deriv g) x)
+
+  have h :
+      (fun y => ((f * g) y - (f * g) x) / (y - x)) =
+        fun y =>
+          ((f y - f x) / (y - x)) * g y +
+            f x * ((g y - g x) / (y - x)) := by
+    ext y
+    simp only [Pi.mul_apply]
+    ring
+
+  rw [h]
+  simp only [Pi.add_apply, Pi.mul_apply]
+
+  apply tends_to_add_tends_to
+  · apply tends_to_mul_tends_to
+    · exact (has_deriv_of_differentiable hf) x
+    · exact continuous_at_iff_tends_to.mp
+        ((continuous_of_differentiable hg) x)
+  · apply tends_to_mul_tends_to
+    · exact tends_to_const (f x) x
+    · exact (has_deriv_of_differentiable hg) x
 
 lemma deriv_const (c : ℝ) : HasDeriv (const _ c) (const _ 0) := by
     intro x ε hε

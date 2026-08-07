@@ -136,6 +136,9 @@ lemma continuous_of_differentiable {f : ℝ → ℝ} (hf : Differentiable f) :
     obtain ⟨f', hf'⟩ := hf
     exact fun x => continuous_at_of_deriv_at (hf' x)
 
+lemma deriv_add_at {f g: ℝ → ℝ} {f' g' x : ℝ} (hf : HasDerivAt f f' x) (hg : HasDerivAt g g' x) :
+  HasDerivAt (f + g) (f' + g') x := sorry
+
 lemma deriv_add {f g : ℝ → ℝ} (hf : Differentiable f) (hg : Differentiable g) :
     HasDeriv (f + g) (deriv f + deriv g) := by
   sorry

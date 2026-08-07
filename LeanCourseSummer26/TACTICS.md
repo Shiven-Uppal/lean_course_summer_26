@@ -41,6 +41,11 @@ sheets.
 - `by_cases` — Splits into two cases according to whether a proposition is true
   or false. [See](../exercises/sheet1.lean#L12)
 
+- `split_ifs with h` — Splits a goal into cases for the conditions occurring in
+  `if ... then ... else ...` expressions, names the condition in each branch
+  `h`, and simplifies the corresponding `if` expression.
+  [See](../LectureNotes/lecture4/exercise_class.lean#L86)
+
 ## Manipulating the tactic state
 
 Many tactics below act on the goal by default. For tactics that support

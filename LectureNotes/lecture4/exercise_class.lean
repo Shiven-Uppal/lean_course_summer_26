@@ -82,13 +82,10 @@ We can prove properties of those functions using case distinction.
 -/
 
 example (hn : n > 0) : collatz n > 0 := by
-  by_cases h : Even n
-  · rw [collatz]
-    rw[if_pos h]
-    obtain ⟨k, hk⟩ := h
-    sorry
   rw [collatz]
-  rw[if_neg h]
+  split_ifs with h
+  · obtain ⟨k, hk⟩ := h
+    sorry
   simp only [gt_iff_lt, lt_add_iff_pos_left, Order.lt_add_one_iff, zero_le]
 
 

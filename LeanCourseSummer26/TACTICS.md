@@ -90,6 +90,16 @@ throughout the context and to the goal.
 - `change` — Replaces the target with a definitionally equal, more convenient
   formulation. [See](../LectureNotes/lecture5/examples5.lean#L172)
 
+- `congrArg f h` — Applies the same function to both sides of an equality. If
+  `h : a = b`, then `congrArg f h` proves `f a = f b`. For example,
+  `apply congrArg deriv` changes a goal `deriv f = deriv g` to `f = g`.
+  This is a proof-producing lemma rather than a tactic.
+  [See](../LectureNotes/lecture5/examples5.lean#L184)
+
+- `congrFun h x` — Evaluates both sides of an equality of functions at the same
+  argument. If `h : f = g`, then `congrFun h x` proves `f x = g x`. This is a
+  proof-producing lemma rather than a tactic.
+
 ## Specialized tactics
 
 - `simp` — Rewrites repeatedly using simplification lemmas. Prefer `simp?` when

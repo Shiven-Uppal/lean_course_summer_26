@@ -41,7 +41,7 @@ lemma satz_von_rolle {f : ℝ → ℝ} {a b : ℝ} (hab : a < b) (hf : Different
 Finally, use the lemma above to prove the main theorem.
 -/
 theorem mean_value_theorem {f : ℝ → ℝ} {a b : ℝ} (hab : a < b) (hf : Differentiable f)
-    : ∃ x ∈ Set.Ioo a b, deriv f x = f b - f a / (b - a) := by
+    : ∃ x ∈ Set.Ioo a b, deriv f x = (f b - f a) / (b - a) := by
   sorry
 
 /-

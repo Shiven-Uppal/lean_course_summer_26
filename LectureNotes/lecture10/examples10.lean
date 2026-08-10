@@ -108,6 +108,7 @@ lemma exp_partial_deriv_tends_to_uniform (r : ℝ) :
   refine ⟨N + 1, fun n hn x hx => ?_⟩
   rw [exp_partial', if_neg (by linarith)]
   exact hN (n - 1) (by omega) x hx
+
 -- derivatives of the partial sums
 lemma exp_partial_deriv {n : ℕ} : HasDeriv (exp_partial n) (exp_partial' n) := by
   induction n with

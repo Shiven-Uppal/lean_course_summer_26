@@ -34,6 +34,8 @@ roots = [
   "LectureNotes.lecture7.examples7",
   "LectureNotes.lecture8.examples8",
   "LectureNotes.lecture9.examples9",
+  "LectureNotes.lecture9.examples9.2",
+  "LectureNotes.lecture10.examples10",
 ]
 
 [[lean_lib]]

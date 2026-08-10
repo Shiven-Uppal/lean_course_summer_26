@@ -251,15 +251,13 @@ lemma exercise2 {S : Set ℝ} (hS : S.Nonempty) (v : upperBounds S) :
         simp only [sub_zero]
         exact Eq.symm (abs_of_nonneg (sub_nonneg_of_le (humem N (hlmem N))))
       _ < ε := by exact hN N (le_refl N)
-  obtain ⟨a, ha⟩ := MySequences.real_numbers_complete hCauchy
+  have ⟨a, ha⟩ := MySequences.real_numbers_complete hCauchy
   use ⟨a, ?_⟩
   · intro b
     apply tends_to_le_of_le ha
     exact fun n => b.2 (hlmem n)
   have ha' : TendsTo ⟨u⟩ a := by
-    have hadd : u = (u - l) + l := by
-      simp only [sub_add_cancel]
-    rw[hadd]
+    rw[show u = (u - l) + l by simp only [sub_add_cancel]]
     simpa only [sub_add_cancel, Pi.sub_apply, zero_add] using tends_to_add hdifflim ha
   intro s hs
   apply tends_to_ge_of_ge ha'

@@ -186,10 +186,26 @@ def IsCauchy (x : RatSeq) := ∀ ε > 0, ∃ N, ∀ m≥ N, ∀ n≥ N, dist (x 
 
 def TendsToRat (x : RatSeq) (a : ℚ) := ∀ ε > 0, ∃ N, ∀ n≥ N, dist (x n) a < ε
 
-def IsCauchyReal (x : RealSeq) := ∀ ε > 0, ∃ N, ∀ m≥ N, ∀ n≥ N, dist (x m) (x n) < ε
+def IsCauchyReal (x : RealSeq) :=  ∀ ε > 0, ∃ N, ∀ m≥ N, ∀ n≥ N, dist (x m) (x n) < ε
+
+theorem cauchy_real_iff {x : RealSeq} :
+  IsCauSeq (abs : ℝ → ℝ) x ↔ IsCauchyReal x  := by
+  constructor
+  · intro h
+    simp only [IsCauchyReal, gt_iff_lt, ge_iff_le, dist]
+    exact fun ε a ↦ IsCauSeq.cauchy₂ h a
+  intro h ε hε
+  obtain ⟨N, hN⟩ := h ε hε
+  use N
+  intro j hj
+  specialize hN N (le_refl N) j hj
+  rw[dist_comm] at hN
+  exact hN
 
 abbrev TendsTo (x : RealSeq) (a : ℝ) := ∀ ε > 0, ∃ N, ∀ n≥ N, dist (x n) a < ε
 
+
+example (x : RealSeq) : IsCauSeq (abs : ℝ → ℝ) x:= by sorry
 
 -- We can evaluate `tends_to` on a sequence of rational numbers.
 example (x : RatSeq) (a : ℝ) : TendsTo x a := by sorry
@@ -199,8 +215,8 @@ lemma is_cauchy_toReal (x : RatSeq) : IsCauchy x → IsCauchyReal x := by
   sorry
 
 -- This is essentially the definition of the real numbers.
-theorem real_numbers_complete {x : RealSeq} (hx : IsCauchyReal x) : ∃ a : ℝ, TendsTo x a := by
-  sorry
+theorem real_numbers_complete {x : RealSeq} (hx : IsCauchyReal x) : ∃ a, TendsTo x a:= by
+  exact ⟨(CauSeq.lim  ⟨x, cauchy_real_iff.2 hx⟩), CauSeq.equiv_lim ⟨_, cauchy_real_iff.2 hx⟩⟩
 
 #check ℝ --ctrl + click to see the actual definition!
 

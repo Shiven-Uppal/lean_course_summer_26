@@ -40,9 +40,9 @@ noncomputable def tagValue {f : ℝ → ℝ} (hf : Differentiable f)
   Classical.choose (mean_value_theorem (J.lower_lt_upper 0) hf)
 
 lemma tagValue_feq {f : ℝ → ℝ} (hf : Differentiable f) (J : Box (Fin 1)) :
-    (J.upper 0 - J.lower 0) * deriv f (tagValue hf J) =
+    (J.upper 0 - J.lower 0) * MyFunctions.deriv f (tagValue hf J) =
       f (J.upper 0) - f (J.lower 0) := by
-  have h : deriv f (tagValue hf J) =
+  have h : MyFunctions.deriv f (tagValue hf J) =
       (f (J.upper 0) - f (J.lower 0)) / (J.upper 0 - J.lower 0) := by
     exact (Classical.choose_spec (mean_value_theorem (J.lower_lt_upper 0) hf)).2
   rw [h]
@@ -139,13 +139,13 @@ lemma sum_endpointDifference (f : ℝ → ℝ) {π : Prepartition unitInterval}
 
 lemma mvtPartition_riemannSum {f : ℝ → ℝ} (hf : Differentiable f)
     (N : ℕ) (hN : 0 < N) :
-    riemannSum (deriv f) zero_lt_one (mvtPartition hf N hN) = f 1 - f 0 := by
+    MyRiemannIntegral.riemannSum (MyFunctions.deriv f) zero_lt_one (mvtPartition hf N hN) = f 1 - f 0 := by
   simp only [riemannSum, integralSum, riemannVolume, ContinuousLinearEquiv.coe_funUnique,
     Function.eval, Fin.default_eq_zero, Fin.isValue, BoxAdditiveMap.volume_apply,
     Finset.univ_unique, Finset.prod_singleton, smul_eq_mul]
   have hsum :
       (∑ J ∈ (mvtPartition hf N hN).boxes,
-        (J.upper 0 - J.lower 0) * deriv f ((mvtPartition hf N hN).tag J 0)) =
+        (J.upper 0 - J.lower 0) * MyFunctions.deriv f ((mvtPartition hf N hN).tag J 0)) =
       ∑ J ∈ (mvtPartition hf N hN).boxes,
         (f (J.upper 0) - f (J.lower 0)) := by
     exact Finset.sum_congr rfl (fun J hJ => by
@@ -155,8 +155,8 @@ lemma mvtPartition_riemannSum {f : ℝ → ℝ} (hf : Differentiable f)
   exact sum_endpointDifference f (mvtPartition_isPartition hf N hN)
 
 theorem integral_of_differentiable_unitInterval {f : ℝ → ℝ} (hf : Differentiable f)
-    (hf' : Integrable (deriv f) zero_lt_one) :
-    HasIntegral (deriv f) zero_lt_one (f 1 - f 0) := by
+    (hf' : Integrable (MyFunctions.deriv f) zero_lt_one) :
+    HasIntegral (MyFunctions.deriv f) zero_lt_one (f 1 - f 0) := by
   obtain ⟨α, hα⟩ := hf'
   have heq : α = f 1 - f 0 := by
     apply eq_of_forall_dist_le

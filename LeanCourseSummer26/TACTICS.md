@@ -90,6 +90,30 @@ throughout the context and to the goal.
 - `change` — Replaces the target with a definitionally equal, more convenient
   formulation. [See](../LectureNotes/lecture5/examples5.lean#L172)
 
+- `convert e` — Uses a proof `e` whose statement is almost the current goal,
+  and leaves the mismatching parts as new equality goals. In `convert e using n`,
+  the numeral `n` controls how deeply congruence is applied; without `using`,
+  the depth is unlimited. For example:
+
+  ```lean
+  example {n : ℕ} (e : Prime (2 * n + 1)) :
+      Prime (n + n + 1) := by
+    convert e
+    -- One goal: ⊢ n + n = 2 * n
+    ring
+  ```
+  
+  `convert e with x ⟨y₁, y₂⟩` names or pattern-matches variables introduced by
+  congruence, much like `rintro`. The form `convert (config := cfg) e` supplies
+  options controlling the congruence rules.
+  [See](../LectureNotes/lecture10/examples10.lean#L116)
+
+- `tac₁ <;> tac₂` — Runs `tac₁`, then runs `tac₂` on every goal produced by
+  `tac₁`. The notation can be chained. For example,
+  `convert h using 1 <;> ext x <;> simp` applies `ext x` to every goal made by
+  `convert`, and then applies `simp` to every resulting goal.
+  [See](../LectureNotes/lecture10/examples10.lean#L116)
+
 - `congrArg f h` — Applies the same function to both sides of an equality. If
   `h : a = b`, then `congrArg f h` proves `f a = f b`. For example,
   `apply congrArg deriv` changes a goal `deriv f = deriv g` to `f = g`.
@@ -107,6 +131,10 @@ throughout the context and to the goal.
 
 - `positivity` — Proves positivity, nonnegativity, or nonzeroness from the
   structure of an expression and facts in the context. [See](../exercises/sheet5.lean#L18)
+
+- `gcongr` — Simplifies an equality or inequality between larger expressions
+  to the corresponding goals for their varying parts.
+  [See](../LectureNotes/lecture10/examples10.lean#L27)
 
 - `linarith` — Solves goals that follow from linear equalities and inequalities
   in the context. 
